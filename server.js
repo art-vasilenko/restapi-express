@@ -1,17 +1,19 @@
-const express = require('express')
-const app = express()
-require('dotenv').config
+const express = require('express');
+require('dotenv').config();
 
-const authRoutes = require('./routes/authRoutes/auth')
-const notesRoutes = require('./routes/notesRoutes/notes')
+const authRoutes = require('./routes/auth-routes/auth');
+const notesRoutes = require('./routes/notes-routes/notes');
+const { notFound, errorHandler } = require('./services/error-middleware');
 
-app.use(express.json())
+const app = express();
+const PORT = process.env.PORT || 5000;
 
-app.use('/api/auth', authRoutes)
-app.use('/api/notes', notesRoutes)
+app.use(express.json());
 
-const PORT = process.env.PORT || 5000
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/notes', notesRoutes);
 
-app.listen(PORT, () => console.log('Сервера на порту 5000'))
+app.use(notFound);
+app.use(errorHandler);
 
-
+app.listen(PORT, () => console.log(`Server listening on port ${PORT}`));
