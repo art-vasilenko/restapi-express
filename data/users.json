@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "email": "artem@mail.ru",
+        "password": "artem123",
+        "token": "token_1"
+    },
+    {
+        "id": 2,
+        "email": "email@email.ru",
+        "password": "newPass",
+        "token": "token_2"
+    }
+]
