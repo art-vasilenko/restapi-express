@@ -46,6 +46,6 @@ curl -X PUT http://localhost:5000/api/v1/notes/NOTE_ID \
     "text": "min 20 characters"
   }'
 
-##deleteNote 
+## deleteNote 
 curl -X DELETE http://localhost:5000/api/v1/notes/NOTE_ID \
   -H "Authorization: Bearer YOUR_TOKEN"
