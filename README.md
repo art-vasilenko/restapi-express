@@ -1,4 +1,4 @@
-Запуск
+#Запуск
 
 npm run dev
 
@@ -6,26 +6,26 @@ npm start
 
 ----------------------------------------------------------------
 
-API
+#API
 
-login - curl -X POST http://localhost:5000/api/v1/auth/login \
+##login - curl -X POST http://localhost:5000/api/v1/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "email@email.com",
     "password": "min 6 characters"
   }'
 
-register - curl -X POST http://localhost:5000/api/v1/auth/register \
+##register - curl -X POST http://localhost:5000/api/v1/auth/register \
   -H "Content-Type: application/json" \
   -d '{
     "email": "email@email.com",
     "password": "min 6 characters"
   }'
 
-getNotes - curl -X GET http://localhost:5000/api/v1/notes \
+##getNotes - curl -X GET http://localhost:5000/api/v1/notes \
   -H "Authorization: Bearer YOUR_TOKEN"
 
-createNote - curl -X POST http://localhost:5000/api/v1/notes \
+##createNote - curl -X POST http://localhost:5000/api/v1/notes \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -d '{
@@ -33,7 +33,7 @@ createNote - curl -X POST http://localhost:5000/api/v1/notes \
     "text": "min 20 characters"
   }'
 
-updateNote - curl -X PUT http://localhost:5000/api/v1/notes/NOTE_ID \
+##updateNote - curl -X PUT http://localhost:5000/api/v1/notes/NOTE_ID \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -d '{
