@@ -1,33 +1,23 @@
-const fs = require('fs').promises;
-const path = require('path');
+const jwt = require('jsonwebtoken');
 
-const userFile = path.join(__dirname, '../data/users.json');
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
 
-const authenticateToken = async (req, res, next) => {
-  const authHeader = req.headers.authorization || '';
-  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '';
+  const token = authHeader && authHeader.split(' ')[1];
 
   if (!token) {
-    return res
-      .status(401)
-      .json({ success: false, error: 'Access token required' });
+    return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  try {
-    const usersData = await fs.readFile(userFile, 'utf8');
-    const users = JSON.parse(usersData);
-    const user = users.find((u) => u.token === token);
-
-    if (!user) {
-      return res.status(401).json({ success: false, error: 'Unauthorized' });
+  jwt.verify(token, process.env.SECRET_KEY, (err, user) => {
+    if (err) {
+      return res.status(403).json({ error: 'Invalid token' });
     }
 
     req.user = user;
+
     next();
-  } catch (error) {
-    res.status(500).json({ success: false, error: 'Server error' });
-    return;
-  }
+  });
 };
 
 module.exports = authenticateToken;

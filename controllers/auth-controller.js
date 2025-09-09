@@ -2,6 +2,9 @@ const fs = require('fs').promises;
 const path = require('path');
 const crypto = require('crypto');
 
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+
 const userFile = path.join(__dirname, '../data/users.json');
 
 const AuthController = {
@@ -29,6 +32,7 @@ const AuthController = {
     }
 
     try {
+      const hashedPassword = await bcrypt.hash(password, 10);
       const usersData = await fs.readFile(userFile, 'utf8');
       const users = JSON.parse(usersData);
 
@@ -43,7 +47,7 @@ const AuthController = {
       const user = {
         id: crypto.randomUUID(),
         email,
-        password: `fakehash:${password}`,
+        password: hashedPassword,
         token: null,
       };
 
@@ -71,20 +75,25 @@ const AuthController = {
     try {
       const usersData = await fs.readFile(userFile, 'utf8');
       const users = JSON.parse(usersData);
-      const userIndex = users.findIndex(
-        (user) =>
-          user.email === email && user.password === `fakehash:${password}`,
-      );
+      const user = users.find((user) => user.email === email);
 
-      if (userIndex === -1) {
+      if (!user) {
         return res
           .status(401)
           .json({ success: false, error: 'Invalid credentials' });
       }
 
-      const token = crypto.randomUUID();
+      const valid = await bcrypt.compare(password, user.password);
 
-      users[userIndex].token = token;
+      if (!valid) {
+        return res
+          .status(401)
+          .json({ success: false, error: 'Invalid credentials' });
+      }
+
+      const token = jwt.sign({ userId: user.id }, process.env.SECRET_KEY);
+
+      user.token = token;
 
       await fs.writeFile(userFile, JSON.stringify(users));
 

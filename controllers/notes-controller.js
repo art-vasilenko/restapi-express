@@ -9,7 +9,7 @@ const NotesController = {
     try {
       const notesData = await fs.readFile(notesFile, 'utf8');
       const notes = JSON.parse(notesData);
-      const userNotes = notes.filter((note) => note.userId === req.user.id);
+      const userNotes = notes.filter((note) => note.userId === req.user.userId);
       res.json({ success: true, data: userNotes });
     } catch (error) {
       res.status(500).json({
@@ -52,7 +52,7 @@ const NotesController = {
         id: crypto.randomUUID(),
         title,
         text,
-        userId: req.user.id,
+        userId: req.user.userId,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
@@ -100,7 +100,7 @@ const NotesController = {
       const notes = JSON.parse(notesData);
 
       const noteIndex = notes.findIndex(
-        (note) => note.id === id && note.userId === req.user.id,
+        (note) => note.id === id && note.userId === req.user.userId,
       );
 
       if (noteIndex === -1) {
@@ -136,7 +136,7 @@ const NotesController = {
       const notes = JSON.parse(notesData);
 
       const noteIndex = notes.findIndex(
-        (note) => note.id === id && note.userId === req.user.id,
+        (note) => note.id === id && note.userId === req.user.userId,
       );
 
       if (noteIndex === -1) {
